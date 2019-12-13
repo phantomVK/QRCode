@@ -1,5 +1,7 @@
 package com.phantomvk.qrcode.core;
 
+import android.animation.AnimatorInflater;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -25,24 +27,24 @@ public class ScannerView extends View {
     private static final int COLOR_LINE = 0xFFFF0000;
     private static final int COLOR_LINE_ALPHA = 0x33FFFFFF;
 
-    // Reuse objects.
+    // Reuse objects
     private final Rect mRect = new Rect();
     private final RectF mRectF = new RectF();
     private final Paint mPaint = new Paint();
 
-    // For onSizeChanged().
+    // For onSizeChanged()
     private int left;
     private int top;
     private int right;
     private int bottom;
 
-    // For scanner corner.
+    // For scanner corner
     private float mLeftF;
     private float mTopF;
     private float mRightF;
     private float mBottomF;
 
-    // Foreground mask.
+    // Foreground mask
     private int mMaskColor;
 
     // Scanner itself
@@ -61,24 +63,27 @@ public class ScannerView extends View {
     private int mCornerStyle;
     private float mCornerSizeHalf;
 
-    private Bitmap mScannerLineBitmap;
-
-    private boolean mIsBarCode;
-
+    // Scanner line
+    private float mLineAnimatedValue;
+    private Bitmap mLineBitmap;
+    private ValueAnimator mLineAnimator;
 
     public ScannerView(Context context) {
         super(context);
+        init();
         initAttrs(null);
     }
 
     public ScannerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
         initAttrs(attrs);
     }
 
-    public ScannerView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        initAttrs(attrs);
+    private void init() {
+        mPaint.setDither(true);
+        mPaint.setAntiAlias(true);
+        mPaint.setFilterBitmap(true);
     }
 
     private void initAttrs(@Nullable AttributeSet attrs) {
@@ -108,11 +113,90 @@ public class ScannerView extends View {
         int lineColor = ta.getColor(R.styleable.ScannerView_vk_code_scanner_line_color, COLOR_LINE);
         int lineColorAlpha = ta.getColor(R.styleable.ScannerView_vk_code_scanner_line_color_alpha, COLOR_LINE_ALPHA);
         int lineHeight = ta.getDimensionPixelOffset(R.styleable.ScannerView_vk_code_scanner_line_height, (int) (dp1 * 2.5));
+        int animatorId = ta.getResourceId(R.styleable.ScannerView_vk_code_scanner_line_animator, 0);
+        boolean animatorEnable = ta.getBoolean(R.styleable.ScannerView_vk_code_scanner_line_enable, true);
 
         ta.recycle();
 
-        final int[] colors = new int[]{lineColorAlpha, lineColor, lineColor, lineColor};
+        final int[] colors = new int[]{lineColorAlpha, lineColor, lineColor, lineColorAlpha};
         setLineStyle(colors, lineHeight);
+        setLineAnimator(animatorEnable, animatorId);
+    }
+
+    /**
+     * Set scanner line style.
+     *
+     * @param height line height
+     */
+    public void setLineStyle(@ColorInt int[] colors, int height) {
+        Bitmap b = Bitmap.createBitmap(mScannerWidth, height, Bitmap.Config.ARGB_8888);
+        GradientDrawable d = new GradientDrawable(LEFT_RIGHT, colors);
+        d.setBounds(0, 0, mScannerWidth, height);
+        d.draw(new Canvas(b));
+        mLineBitmap = b;
+    }
+
+    private void setLineAnimator(boolean animatorEnable, int animatorId) {
+        if (!animatorEnable) return;
+
+        if (animatorId != 0) {
+            setAnimator((ValueAnimator) AnimatorInflater.loadAnimator(getContext(), animatorId));
+        } else {
+            setAnimator(getDefaultAnimator());
+        }
+    }
+
+    /**
+     * Get default animator.
+     *
+     * @return ValueAnimator
+     */
+    protected ValueAnimator getDefaultAnimator() {
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.setDuration(2000);
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.setRepeatMode(ValueAnimator.RESTART);
+        return animator;
+    }
+
+    /**
+     * Set new Animator
+     *
+     * @param animator ValueAnimator
+     */
+    public void setAnimator(@Nullable ValueAnimator animator) {
+        if (mLineAnimator != null) {
+            mLineAnimator.cancel();
+            mLineAnimator = null;
+        }
+
+        if (animator != null) {
+            mLineAnimator = animator;
+            mLineAnimator.addUpdateListener(a -> {
+                mLineAnimatedValue = a.getAnimatedFraction() * mScannerHeight;
+                invalidate();
+            });
+        }
+    }
+
+    @Override
+    protected void onWindowVisibilityChanged(int visibility) {
+        super.onWindowVisibilityChanged(visibility);
+        changeAnimatorStatus(visibility == View.VISIBLE);
+    }
+
+    @Override
+    public void onScreenStateChanged(int screenState) {
+        changeAnimatorStatus(screenState == View.SCREEN_STATE_ON);
+    }
+
+    protected void changeAnimatorStatus(boolean start) {
+        if (mLineAnimator == null) return;
+        if (start) {
+            mLineAnimator.start();
+        } else {
+            mLineAnimator.cancel();
+        }
     }
 
     @Override
@@ -129,21 +213,18 @@ public class ScannerView extends View {
     private void drawMask(Canvas canvas) {
         if (mMaskColor == Color.TRANSPARENT) return;
 
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
-
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mMaskColor);
+
+        int width = canvas.getWidth();
 
         canvas.drawRect(0, 0, width, top, mPaint);
         canvas.drawRect(0, top, left, bottom, mPaint);
         canvas.drawRect(right, top, width, bottom, mPaint);
-        canvas.drawRect(0, bottom, width, height, mPaint);
+        canvas.drawRect(0, bottom, width, canvas.getHeight(), mPaint);
     }
 
     private void drawBorder(Canvas canvas) {
-        if (mBorderSize <= 0) return;
-
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(mBorderColor);
         mPaint.setStrokeWidth(mBorderSize);
@@ -152,9 +233,6 @@ public class ScannerView extends View {
     }
 
     private void drawCorners(Canvas canvas) {
-        if (mCornerSizeHalf <= 0) return;
-
-        mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setColor(mCornerColor);
         mPaint.setStrokeWidth(mCornerSize);
 
@@ -185,12 +263,15 @@ public class ScannerView extends View {
         }
     }
 
+    /**
+     * Do not draw scanner line if there is no animator.
+     */
     private void drawLine(Canvas canvas) {
-        if (mIsBarCode) {
-        } else {
-            mRectF.set(left, top, right, top + mScannerLineBitmap.getHeight());
-            canvas.drawBitmap(mScannerLineBitmap, null, mRectF, mPaint);
-        }
+        if (mLineAnimator == null) return;
+
+        float minBottom = Math.min(top + mLineAnimatedValue + mLineBitmap.getHeight(), bottom);
+        mRectF.set(left, top + mLineAnimatedValue, right, minBottom);
+        canvas.drawBitmap(mLineBitmap, null, mRectF, mPaint);
     }
 
     @Override
@@ -217,18 +298,5 @@ public class ScannerView extends View {
             mRightF = right - mCornerSizeHalf;
             mBottomF = bottom - mCornerSizeHalf;
         }
-    }
-
-    /**
-     * Set scanner line style.
-     *
-     * @param height line height
-     */
-    public void setLineStyle(@ColorInt int[] colors, int height) {
-        Bitmap b = Bitmap.createBitmap(mScannerWidth, height, Bitmap.Config.ARGB_8888);
-        GradientDrawable d = new GradientDrawable(LEFT_RIGHT, colors);
-        d.setBounds(0, 0, mScannerWidth, height);
-        d.draw(new Canvas(b));
-        mScannerLineBitmap = b;
     }
 }
