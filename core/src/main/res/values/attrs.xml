@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScannerView">
+        <attr name="vk_code_mask_color" format="color|reference" />
+
+        <attr name="vk_code_scanner_width" format="dimension|reference" />
+        <attr name="vk_code_scanner_height" format="dimension|reference" />
+        <attr name="vk_code_scanner_margin_top" format="dimension|reference" />
+
+        <attr name="vk_code_scanner_border_size" format="dimension|reference" />
+        <attr name="vk_code_scanner_border_color" format="color|reference" />
+
+        <attr name="vk_code_scanner_corner_color" format="color|reference" />
+        <attr name="vk_code_scanner_corner_size" format="dimension|reference" />
+        <attr name="vk_code_scanner_corner_length" format="dimension|reference" />
+        <attr name="vk_code_scanner_corner_style">
+            <enum name="center" value="0" />
+            <enum name="inside" value="1" />
+        </attr>
+
+        <attr name="vk_code_scanner_line_color" format="color|reference" />
+        <attr name="vk_code_scanner_line_color_alpha" format="color|reference" />
+        <attr name="vk_code_scanner_line_height" format="dimension|reference" />
+    </declare-styleable>
+</resources>
