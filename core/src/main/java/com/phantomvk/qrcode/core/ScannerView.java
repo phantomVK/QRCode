@@ -38,7 +38,7 @@ public class ScannerView extends View {
     private int right;
     private int bottom;
 
-    // For scanner corner
+    // For scanner corners
     private float mLeftF;
     private float mTopF;
     private float mRightF;
@@ -56,7 +56,7 @@ public class ScannerView extends View {
     private int mBorderSize;
     private int mBorderColor;
 
-    // Scanner corner
+    // Scanner corners
     private int mCornerColor;
     private int mCornerSize;
     private int mCornerLength;
@@ -64,7 +64,7 @@ public class ScannerView extends View {
     private float mCornerSizeHalf;
 
     // Scanner line
-    private float mLineAnimatedValue;
+    private float mLineAnimatedTop;
     private Bitmap mLineBitmap;
     private ValueAnimator mLineAnimator;
 
@@ -111,14 +111,14 @@ public class ScannerView extends View {
 
         // Scanner line
         int lineColor = ta.getColor(R.styleable.ScannerView_vk_code_scanner_line_color, COLOR_LINE);
-        int lineColorAlpha = ta.getColor(R.styleable.ScannerView_vk_code_scanner_line_color_alpha, COLOR_LINE_ALPHA);
+        int lineAlpha = ta.getColor(R.styleable.ScannerView_vk_code_scanner_line_alpha, COLOR_LINE_ALPHA);
         int lineHeight = ta.getDimensionPixelOffset(R.styleable.ScannerView_vk_code_scanner_line_height, (int) (dp1 * 2.5));
         int animatorId = ta.getResourceId(R.styleable.ScannerView_vk_code_scanner_line_animator, 0);
         boolean animatorEnable = ta.getBoolean(R.styleable.ScannerView_vk_code_scanner_line_enable, true);
 
         ta.recycle();
 
-        final int[] colors = new int[]{lineColorAlpha, lineColor, lineColor, lineColorAlpha};
+        final int[] colors = new int[]{lineAlpha, lineColor, lineColor, lineAlpha};
         setLineStyle(colors, lineHeight);
         setLineAnimator(animatorEnable, animatorId);
     }
@@ -173,7 +173,7 @@ public class ScannerView extends View {
         if (animator != null) {
             mLineAnimator = animator;
             mLineAnimator.addUpdateListener(a -> {
-                mLineAnimatedValue = a.getAnimatedFraction() * mScannerHeight;
+                mLineAnimatedTop = a.getAnimatedFraction() * mScannerHeight;
                 invalidate();
             });
         }
@@ -269,8 +269,8 @@ public class ScannerView extends View {
     private void drawLine(Canvas canvas) {
         if (mLineAnimator == null) return;
 
-        float minBottom = Math.min(top + mLineAnimatedValue + mLineBitmap.getHeight(), bottom);
-        mRectF.set(left, top + mLineAnimatedValue, right, minBottom);
+        float minBottom = Math.min(top + mLineAnimatedTop + mLineBitmap.getHeight(), bottom);
+        mRectF.set(left, top + mLineAnimatedTop, right, minBottom);
         canvas.drawBitmap(mLineBitmap, null, mRectF, mPaint);
     }
 

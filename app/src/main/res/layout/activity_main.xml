@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <com.phantomvk.qrcode.core.ScannerView
+    <Button
+        android:id="@+id/scanQRCode"
+        style="?android:attr/buttonBarButtonStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:vk_code_scanner_line_animator="@animator/anim_scanner_line" />
+        android:layout_height="wrap_content"
+        android:text="@string/scan_qr_code"
+        android:textSize="14sp" />
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/generateQRCode"
+        style="?android:attr/buttonBarButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/generate_qr_code"
+        android:textSize="14sp" />
+
+</LinearLayout>

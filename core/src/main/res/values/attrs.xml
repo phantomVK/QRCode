@@ -19,7 +19,7 @@
         </attr>
 
         <attr name="vk_code_scanner_line_color" format="color|reference" />
-        <attr name="vk_code_scanner_line_color_alpha" format="color|reference" />
+        <attr name="vk_code_scanner_line_alpha" format="color|reference" />
         <attr name="vk_code_scanner_line_height" format="dimension|reference" />
         <attr name="vk_code_scanner_line_animator" format="reference" />
         <attr name="vk_code_scanner_line_enable" format="boolean" />
