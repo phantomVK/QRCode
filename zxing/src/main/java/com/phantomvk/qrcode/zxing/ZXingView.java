@@ -4,7 +4,7 @@ import android.content.Context;
 import android.hardware.Camera;
 import android.util.AttributeSet;
 
-import com.phantomvk.qrcode.core.QRCodeView;
+import com.phantomvk.qrcode.core.widget.QRCodeView;
 
 public class ZXingView extends QRCodeView {
 

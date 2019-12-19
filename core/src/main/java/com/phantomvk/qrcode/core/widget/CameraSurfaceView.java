@@ -1,24 +1,21 @@
-package com.phantomvk.qrcode.core;
+package com.phantomvk.qrcode.core.widget;
 
 import android.content.Context;
-import android.hardware.Camera;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
+public class CameraSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 
-    private Camera mCamera;
-
-    public CameraView(Context context) {
+    public CameraSurfaceView(Context context) {
         super(context);
     }
 
-    public CameraView(Context context, AttributeSet attrs) {
+    public CameraSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CameraView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CameraSurfaceView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

@@ -1,5 +1,6 @@
 package com.phantomvk.qrcode.zxingdemo
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -10,7 +11,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        scanQRCode.setOnClickListener { ScannerActivity.start(this) }
-        generateQRCode.setOnClickListener { GeneratorActivity.start(this) }
+        scanQRCode.setOnClickListener {
+            startActivity(Intent(this, ScannerActivity::class.java))
+        }
+
+        generateQRCode.setOnClickListener {
+            startActivity(Intent(this, GeneratorActivity::class.java))
+        }
     }
 }

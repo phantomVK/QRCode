@@ -1,4 +1,4 @@
-package com.phantomvk.qrcode.core;
+package com.phantomvk.qrcode.core.widget;
 
 import android.content.Context;
 import android.graphics.Paint;

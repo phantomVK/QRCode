@@ -1,8 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:overScrollMode="never"
+    android:scrollbars="vertical"
     tools:context=".GeneratorActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image1"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            tools:background="@android:color/darker_gray" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            tools:text="AppCompatTextView" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image2"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="22dp"
+            tools:background="@android:color/darker_gray" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            tools:text="AppCompatTextView" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image3"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            tools:background="@android:color/darker_gray" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            tools:text="AppCompatTextView" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image4"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            tools:background="@android:color/darker_gray" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            tools:text="AppCompatTextView" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image5"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            tools:background="@android:color/darker_gray" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            tools:text="AppCompatTextView" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image6"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="16dp"
+            tools:background="@android:color/darker_gray" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textSize="16sp"
+            tools:text="AppCompatTextView" />
+    </LinearLayout>
+</ScrollView>

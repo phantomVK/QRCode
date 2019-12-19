@@ -1,4 +1,4 @@
-package com.phantomvk.qrcode.core;
+package com.phantomvk.qrcode.core.widget;
 
 import android.animation.AnimatorInflater;
 import android.animation.ValueAnimator;
@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -17,6 +16,7 @@ import android.view.View;
 import androidx.annotation.ColorInt;
 import androidx.annotation.Nullable;
 
+import com.phantomvk.qrcode.core.R;
 import com.phantomvk.qrcode.core.util.CoreUtil;
 
 import static android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT;
@@ -28,7 +28,6 @@ public class ScannerView extends View {
     private static final int COLOR_LINE_ALPHA = 0x33FFFFFF;
 
     // Reuse objects
-    private final Rect mRect = new Rect();
     private final RectF mRectF = new RectF();
     private final Paint mPaint = new Paint();
 
