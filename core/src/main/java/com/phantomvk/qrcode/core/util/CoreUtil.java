@@ -2,24 +2,18 @@ package com.phantomvk.qrcode.core.util;
 
 import android.content.Context;
 import android.graphics.Point;
-import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 import static android.content.Context.WINDOW_SERVICE;
-import static android.util.TypedValue.COMPLEX_UNIT_DIP;
-import static android.util.TypedValue.COMPLEX_UNIT_SP;
-import static android.util.TypedValue.applyDimension;
 
 public class CoreUtil {
 
     public static float dp(Context context, int value) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return applyDimension(COMPLEX_UNIT_DIP, value, metrics);
+        return context.getResources().getDisplayMetrics().density * value;
     }
 
     public static float sp(Context context, int value) {
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return applyDimension(COMPLEX_UNIT_SP, value, metrics);
+        return context.getResources().getDisplayMetrics().scaledDensity * value;
     }
 
     public static void getDisplaySize(Context context, Point point) {

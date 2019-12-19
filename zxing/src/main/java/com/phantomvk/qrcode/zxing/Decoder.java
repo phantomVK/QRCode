@@ -125,8 +125,6 @@ public final class Decoder {
         HIGH_FREQUENCY_HINT_MAP.put(DecodeHintType.CHARACTER_SET, UTF8);
     }
 
-    private static final MultiFormatReader sMultiFormatReader = new MultiFormatReader();
-
     /**
      * Must not run on UiThread.
      *
@@ -139,14 +137,14 @@ public final class Decoder {
         try {
             int w = bitmap.getWidth();
             int h = bitmap.getHeight();
-            int[] pixels = getArrayInt(w, h);
+            int[] pixels = new int[w * h];
 
             bitmap.getPixels(pixels, 0, w, 0, 0, w, h);
             source = new RGBLuminanceSource(w, h, pixels);
 
             HybridBinarizer binarizer = new HybridBinarizer(source);
             BinaryBitmap binaryBitmap = new BinaryBitmap(binarizer);
-            Result result = sMultiFormatReader.decode(binaryBitmap, HINTS_MAP);
+            Result result = new MultiFormatReader().decode(binaryBitmap, HINTS_MAP);
             return result.getText();
         } catch (NotFoundException e) {
             e.printStackTrace();
@@ -155,7 +153,7 @@ public final class Decoder {
         try {
             GlobalHistogramBinarizer binarizer = new GlobalHistogramBinarizer(source);
             BinaryBitmap binaryBitmap = new BinaryBitmap(binarizer);
-            Result result = sMultiFormatReader.decode(binaryBitmap, HINTS_MAP);
+            Result result = new MultiFormatReader().decode(binaryBitmap, HINTS_MAP);
             return result.getText();
         } catch (NotFoundException e) {
             e.printStackTrace();
@@ -164,27 +162,28 @@ public final class Decoder {
         return null;
     }
 
-    private static final int[] EMPTY_ARRAY_INT = new int[]{};
     private static int sWidth = -1;
     private static int sHeight = -1;
-    private static int[] sArrayInt = EMPTY_ARRAY_INT;
+    private static int[] sIntArray = null;
 
     /**
-     * Thread not safe.
+     * Thread not safe and reuse IntArray.
      *
      * @param width  width int
      * @param height height int
      * @return int[width * height]
      */
     private static int[] getArrayInt(final int width, final int height) {
-        if ((width == sWidth && height == sHeight)) return sArrayInt;
-        if (width == sHeight && height == sWidth) return sArrayInt;
+        if (width <= 0) throw new IllegalArgumentException("width must larger than 0.");
+        if (height <= 0) throw new IllegalArgumentException("height must larger than 0.");
+        if (width == sWidth && height == sHeight) return sIntArray;
+        if (width == sHeight && height == sWidth) return sIntArray;
 
         sWidth = width;
         sHeight = height;
-        sArrayInt = new int[width * height];
+        sIntArray = new int[width * height];
 
-        return sArrayInt;
+        return sIntArray;
     }
 
     /**
@@ -193,6 +192,6 @@ public final class Decoder {
     private static void releaseArrayInt() {
         sWidth = -1;
         sHeight = -1;
-        sArrayInt = EMPTY_ARRAY_INT;
+        sIntArray = null;
     }
 }

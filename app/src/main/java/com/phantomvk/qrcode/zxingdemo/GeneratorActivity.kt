@@ -1,17 +1,23 @@
 package com.phantomvk.qrcode.zxingdemo
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.AsyncTask
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import com.google.zxing.WriterException
+import com.phantomvk.qrcode.core.util.CoreUtil
+import com.phantomvk.qrcode.zxing.Decoder
 import com.phantomvk.qrcode.zxing.Encoder
 import kotlinx.android.synthetic.main.activity_generator.*
 import java.lang.ref.SoftReference
+
 
 class GeneratorActivity : AppCompatActivity() {
 
@@ -19,35 +25,36 @@ class GeneratorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_generator)
-        val size = (resources.displayMetrics.density * 150).toInt()
+        val size = CoreUtil.dp(this, 180).toInt()
 
         text1.text = "https://google.com/"
-        CodeTask("https://google.com/", size, resources, image1)
+        EncodeTask("https://google.com/", size, resources, image1)
 
         text2.text = "https://bing.com/"
-        CodeTask("https://bing.com/", size, resources, image2)
+        EncodeTask("https://bing.com/", size, resources, image2)
 
         text3.text = "https://github.com/"
-        CodeTask("https://github.com/", size, resources, image3)
+        EncodeTask("https://github.com/", size, resources, image3)
 
         text4.text = "https://stackoverflow.com/"
-        CodeTask("https://stackoverflow.com/", size, resources, image4)
+        EncodeTask("https://stackoverflow.com/", size, resources, image4)
 
         text5.text = "https://medium.com/"
-        CodeTask("https://medium.com/", size, resources, image5)
+        EncodeTask("https://medium.com/", size, resources, image5)
 
         text6.text = "https://youtube.com/"
-        CodeTask("https://youtube.com/", size, resources, image6)
+        EncodeTask("https://youtube.com/", size, resources, image6)
     }
-
 }
 
-class CodeTask(private val contents: String,
-               private val pixels: Int,
-               private val resources: Resources,
-               imageView: AppCompatImageView) : AsyncTask<Void, Void, Bitmap?>() {
+class EncodeTask(
+    private val contents: String,
+    private val pixels: Int,
+    private val resources: Resources,
+    imageView: AppCompatImageView
+) : AsyncTask<Void, Void, Bitmap?>() {
 
-    private val softRef: SoftReference<AppCompatImageView> = SoftReference(imageView)
+    private val softRef = SoftReference(imageView)
 
     init {
         executeOnExecutor(THREAD_POOL_EXECUTOR)
@@ -64,11 +71,38 @@ class CodeTask(private val contents: String,
     }
 
     override fun onPostExecute(result: Bitmap?) {
-        if (result != null) softRef.get()?.setImageBitmap(result)
+        val v = softRef.get();
+        if (result != null && v != null) {
+            v.setImageBitmap(result)
+            v.setOnLongClickListener {
+                val bitmap = (v.drawable as BitmapDrawable).bitmap
+                val applicationContext = v.context.applicationContext
+                DecodeTask(bitmap, applicationContext)
+                return@setOnLongClickListener true
+            }
+        }
     }
 
     private companion object {
         private val PAINT = Encoder.getPaint()
         private val HINTS = Encoder.getHints()
+    }
+}
+
+class DecodeTask(
+    private val bitmap: Bitmap,
+    private val context: Context
+) : AsyncTask<Void, Void, String?>() {
+
+    init {
+        executeOnExecutor(THREAD_POOL_EXECUTOR)
+    }
+
+    override fun doInBackground(vararg params: Void?): String? {
+        return Decoder.decode(bitmap)
+    }
+
+    override fun onPostExecute(result: String?) {
+        if (result != null) Toast.makeText(context, result, Toast.LENGTH_LONG).show()
     }
 }
