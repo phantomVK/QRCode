@@ -2,5 +2,6 @@
     <string name="app_name">QRCode</string>
     <string name="scan_qr_code">Scan QRCode</string>
     <string name="generate_qr_code">Generate QRCode</string>
+    <string name="qrocde_at_runtime">QrCodes below generated at Runtime</string>
     <string name="long_press_to_decode">Long press ImageView to decode QrCode</string>
 </resources>

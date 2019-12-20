@@ -58,15 +58,16 @@ public final class Encoder {
                                       @NonNull Map<EncodeHintType, ?> hints) throws WriterException {
 
         BitMatrix m = new MultiFormatWriter().encode(contents, format, width, height, hints);
-        Bitmap b = Bitmap.createBitmap(width, height, config);
-        if (foregroundColor != BLACK) b.eraseColor(foregroundColor);
+        final int[] pixels = new int[width * height];
 
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                if (!m.get(x, y)) b.setPixel(x, y, backgroundColor);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                pixels[y * width + x] = m.get(x, y) ? foregroundColor : backgroundColor;
             }
         }
 
+        Bitmap b = Bitmap.createBitmap(width, height, config);
+        b.setPixels(pixels, 0, width, 0, 0, width, height);
         return b;
     }
 

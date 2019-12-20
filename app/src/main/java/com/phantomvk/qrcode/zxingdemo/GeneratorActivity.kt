@@ -72,14 +72,14 @@ class EncodeTask(
 
     override fun onPostExecute(result: Bitmap?) {
         val v = softRef.get();
-        if (result != null && v != null) {
-            v.setImageBitmap(result)
-            v.setOnLongClickListener {
-                val bitmap = (v.drawable as BitmapDrawable).bitmap
-                val applicationContext = v.context.applicationContext
-                DecodeTask(bitmap, applicationContext)
-                return@setOnLongClickListener true
-            }
+        if (result == null || v == null) return
+
+        v.setImageBitmap(result)
+        v.setOnLongClickListener {
+            val bitmap = (v.drawable as BitmapDrawable).bitmap
+            val applicationContext = v.context.applicationContext
+            DecodeTask(bitmap, applicationContext)
+            return@setOnLongClickListener true
         }
     }
 
