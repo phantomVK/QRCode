@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -19,6 +21,7 @@ import androidx.annotation.Nullable;
 import com.phantomvk.qrcode.core.R;
 import com.phantomvk.qrcode.core.util.CoreUtil;
 
+import static android.graphics.Canvas.ALL_SAVE_FLAG;
 import static android.graphics.drawable.GradientDrawable.Orientation.LEFT_RIGHT;
 
 public class ScannerView extends View {
@@ -67,6 +70,8 @@ public class ScannerView extends View {
     private Bitmap mLineBitmap;
     private ValueAnimator mLineAnimator;
 
+    private PorterDuffXfermode mClearMode = new PorterDuffXfermode(PorterDuff.Mode.CLEAR);
+
     public ScannerView(Context context) {
         super(context);
         init();
@@ -80,6 +85,7 @@ public class ScannerView extends View {
     }
 
     private void init() {
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         mPaint.setDither(true);
         mPaint.setAntiAlias(true);
         mPaint.setFilterBitmap(true);
@@ -216,11 +222,19 @@ public class ScannerView extends View {
         mPaint.setColor(mMaskColor);
 
         int width = canvas.getWidth();
+        int height = canvas.getHeight();
 
-        canvas.drawRect(0, 0, width, top, mPaint);
-        canvas.drawRect(0, top, left, bottom, mPaint);
-        canvas.drawRect(right, top, width, bottom, mPaint);
-        canvas.drawRect(0, bottom, width, canvas.getHeight(), mPaint);
+        int count = canvas.saveLayer(0, 0, width, height, mPaint, ALL_SAVE_FLAG);
+        canvas.drawRect(0, 0, width, height, mPaint);
+        mPaint.setXfermode(mClearMode);
+        canvas.drawRect(left, top, right, bottom, mPaint);
+        mPaint.setXfermode(null);
+        canvas.restoreToCount(count);
+
+//        canvas.drawRect(0, 0, width, top, mPaint);
+//        canvas.drawRect(0, top, left, bottom, mPaint);
+//        canvas.drawRect(right, top, width, bottom, mPaint);
+//        canvas.drawRect(0, bottom, width, canvas.getHeight(), mPaint);
     }
 
     private void drawBorder(Canvas canvas) {
