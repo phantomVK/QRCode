@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.phantomvk.qrcode.zxing.ZXingView
+    <com.phantomvk.qrcode.core.widget.ScannerView
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

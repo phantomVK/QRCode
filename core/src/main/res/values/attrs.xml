@@ -14,8 +14,9 @@
         <attr name="vk_code_scanner_corner_size" format="dimension|reference" />
         <attr name="vk_code_scanner_corner_length" format="dimension|reference" />
         <attr name="vk_code_scanner_corner_style">
-            <enum name="center" value="0" />
-            <enum name="inside" value="1" />
+            <enum name="inside" value="0" />
+            <enum name="center" value="1" />
+            <enum name="outside" value="2" />
         </attr>
 
         <attr name="vk_code_scanner_line_color" format="color|reference" />
