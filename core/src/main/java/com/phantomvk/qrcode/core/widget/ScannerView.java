@@ -42,6 +42,7 @@ public class ScannerView extends View {
     private int mScannerHeight;
 
     // Mask
+    private final Path mMaskPath = new Path();
     private final Paint mMaskPaint = new Paint(ANTI_ALIAS_FLAG | DITHER_FLAG);
 
     // Border
@@ -204,11 +205,7 @@ public class ScannerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         if (mMaskPaint.getColor() != Color.TRANSPARENT) {
-            int width = getWidth();
-            canvas.drawRect(0, 0, width, top, mMaskPaint);
-            canvas.drawRect(0, top, left, bottom, mMaskPaint);
-            canvas.drawRect(right, top, width, bottom, mMaskPaint);
-            canvas.drawRect(0, bottom, width, getHeight(), mMaskPaint);
+            canvas.drawPath(mMaskPath, mMaskPaint);
         }
 
         canvas.drawRect(left, top, right, bottom, mBorderPaint);
@@ -225,13 +222,14 @@ public class ScannerView extends View {
         right = left + mScannerWidth;
         bottom = top + mScannerHeight;
 
-        onCornerStyleChange(left, top, right, bottom, mCornerLength);
+        onMaskPathChange(w, h, left, top, right, bottom);
+        onCornerPathChange(left, top, right, bottom, mCornerLength);
     }
 
     /**
      * Calculate new scanner corner size if style has changed.
      */
-    private void onCornerStyleChange(int left, int top, int right, int bottom, int length) {
+    private void onCornerPathChange(int left, int top, int right, int bottom, int length) {
         float leftF, topF, rightF, bottomF;
 
         switch (mCornerStyle) {
@@ -256,20 +254,44 @@ public class ScannerView extends View {
                 bottomF = bottom;
         }
 
+        mCornerPath.reset();
+
+        // top left
         mCornerPath.moveTo(leftF, topF + length);
         mCornerPath.lineTo(leftF, topF);
         mCornerPath.lineTo(leftF + length, topF);
 
+        // top right
         mCornerPath.moveTo(rightF - length, topF);
         mCornerPath.lineTo(rightF, topF);
         mCornerPath.lineTo(rightF, topF + length);
 
+        // bottom right
         mCornerPath.moveTo(rightF, bottomF - length);
         mCornerPath.lineTo(rightF, bottomF);
         mCornerPath.lineTo(rightF - length, bottomF);
 
+        // bottom left
         mCornerPath.moveTo(leftF + length, bottomF);
         mCornerPath.lineTo(leftF, bottomF);
         mCornerPath.lineTo(leftF, bottomF - length);
+    }
+
+    /**
+     * Calculate new scanner mask path if style has changed.
+     */
+    private void onMaskPathChange(int w, int h, int left, int top, int right, int bottom) {
+        mMaskPath.reset();
+        mMaskPath.moveTo(0, 0);
+        mMaskPath.lineTo(w, 0);
+        mMaskPath.lineTo(w, h);
+        mMaskPath.lineTo(right, h);
+        mMaskPath.lineTo(right, top);
+        mMaskPath.lineTo(left, top);
+        mMaskPath.lineTo(left, bottom);
+        mMaskPath.lineTo(right, bottom);
+        mMaskPath.lineTo(right, h);
+        mMaskPath.lineTo(0, h);
+        mMaskPath.close();
     }
 }
