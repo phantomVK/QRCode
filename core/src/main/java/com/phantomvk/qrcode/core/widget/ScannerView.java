@@ -31,7 +31,6 @@ public class ScannerView extends View {
     private static final int COLOR_LINE = 0xFFFF0000;
     private static final int COLOR_LINE_ALPHA = 0x33FFFFFF;
 
-    // For onSizeChanged()
     private int left;
     private int top;
     private int right;
@@ -153,7 +152,7 @@ public class ScannerView extends View {
      *
      * @return ValueAnimator
      */
-    protected ValueAnimator createDefaultAnimator() {
+    private ValueAnimator createDefaultAnimator() {
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1).setDuration(2000);
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.RESTART);
@@ -185,20 +184,20 @@ public class ScannerView extends View {
     @Override
     protected void onWindowVisibilityChanged(int visibility) {
         super.onWindowVisibilityChanged(visibility);
-        animatorStatusChange(mLineAnimator, visibility == View.VISIBLE);
+        animatorStatusChange(visibility == VISIBLE);
     }
 
     @Override
     public void onScreenStateChanged(int screenState) {
-        animatorStatusChange(mLineAnimator, screenState == View.SCREEN_STATE_ON);
+        animatorStatusChange(screenState == SCREEN_STATE_ON);
     }
 
-    protected void animatorStatusChange(ValueAnimator animator, boolean start) {
-        if (animator == null) return;
+    private void animatorStatusChange(boolean start) {
+        if (mLineAnimator == null) return;
         if (start) {
-            animator.start();
+            mLineAnimator.start();
         } else {
-            animator.end();
+            mLineAnimator.end();
         }
     }
 
