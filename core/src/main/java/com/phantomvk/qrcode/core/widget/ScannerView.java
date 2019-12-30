@@ -30,6 +30,7 @@ public class ScannerView extends View {
     private static final int COLOR_MASK = 0x33888888;
     private static final int COLOR_LINE = 0xFFFF0000;
     private static final int COLOR_LINE_ALPHA = 0x33FFFFFF;
+    private static final int PAINT_FLAG = ANTI_ALIAS_FLAG | DITHER_FLAG;
 
     private int left;
     private int top;
@@ -42,23 +43,23 @@ public class ScannerView extends View {
 
     // Mask
     private final Path mMaskPath = new Path();
-    private final Paint mMaskPaint = new Paint(ANTI_ALIAS_FLAG | DITHER_FLAG);
+    private final Paint mMaskPaint = new Paint(PAINT_FLAG);
 
     // Border
-    private final Paint mBorderPaint = new Paint(ANTI_ALIAS_FLAG | DITHER_FLAG);
+    private final Paint mBorderPaint = new Paint(PAINT_FLAG);
 
     // Corner
     private int mCornerLength;
     private int mCornerStyle;
     private int mCornerSizeHalf;
     private final Path mCornerPath = new Path();
-    private final Paint mCornerPaint = new Paint(ANTI_ALIAS_FLAG | DITHER_FLAG);
+    private final Paint mCornerPaint = new Paint(PAINT_FLAG);
 
     // Line
     private Bitmap mLineBitmap;
     private ValueAnimator mLineAnimator;
     private final RectF mLineRectF = new RectF();
-    private final Paint mLinePaint = new Paint(ANTI_ALIAS_FLAG | DITHER_FLAG);
+    private final Paint mLinePaint = new Paint(PAINT_FLAG);
 
     {
         mMaskPaint.setStyle(Paint.Style.FILL);
@@ -221,7 +222,7 @@ public class ScannerView extends View {
         right = left + mScannerWidth;
         bottom = top + mScannerHeight;
 
-        onMaskPathChange(w, h, left, top, right, bottom);
+        onMaskPathChange(left, top, right, bottom, w, h);
         onCornerPathChange(left, top, right, bottom, mCornerLength);
     }
 
@@ -279,9 +280,8 @@ public class ScannerView extends View {
     /**
      * Calculate new scanner mask path if style has changed.
      */
-    private void onMaskPathChange(int w, int h, int left, int top, int right, int bottom) {
+    private void onMaskPathChange(int left, int top, int right, int bottom, int w, int h) {
         mMaskPath.reset();
-        mMaskPath.moveTo(0, 0);
         mMaskPath.lineTo(w, 0);
         mMaskPath.lineTo(w, h);
         mMaskPath.lineTo(right, h);
