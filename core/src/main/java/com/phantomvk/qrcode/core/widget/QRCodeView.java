@@ -9,8 +9,11 @@ import android.widget.RelativeLayout;
 public abstract class QRCodeView extends RelativeLayout implements Camera.PreviewCallback {
 
     protected Camera mCamera;
+    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
 
-    private final Paint mPaint = new Paint();
+    {
+        mPaint.setStyle(Paint.Style.FILL);
+    }
 
     public QRCodeView(Context context) {
         super(context);
@@ -24,9 +27,6 @@ public abstract class QRCodeView extends RelativeLayout implements Camera.Previe
         super(context, attrs, defStyleAttr);
     }
 
-    private void init() {
-        mPaint.setDither(true);
-        mPaint.setAntiAlias(true);
-        mPaint.setStyle(Paint.Style.FILL);
+    public void onPostResult(String result) {
     }
 }

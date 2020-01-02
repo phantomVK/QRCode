@@ -71,7 +71,7 @@ class EncodeTask(
     }
 
     override fun onPostExecute(result: Bitmap?) {
-        val v = softRef.get();
+        val v = softRef.get()
         if (result == null || v == null) return
 
         v.setImageBitmap(result)

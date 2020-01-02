@@ -35,6 +35,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+    //noinspection GradleDependency
     api 'com.google.zxing:core:3.3.3'
     api project(":core")
 }

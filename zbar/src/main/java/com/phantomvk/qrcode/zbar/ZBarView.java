@@ -1,4 +1,4 @@
-package com.phantomvk.qrcode.zxing;
+package com.phantomvk.qrcode.zbar;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,17 +11,17 @@ import androidx.annotation.Nullable;
 import com.phantomvk.qrcode.core.callback.CodeReader;
 import com.phantomvk.qrcode.core.widget.QRCodeView;
 
-public class ZXingView extends QRCodeView implements CodeReader {
+public class ZBarView extends QRCodeView implements CodeReader {
 
-    public ZXingView(Context context) {
+    public ZBarView(Context context) {
         super(context);
     }
 
-    public ZXingView(Context context, AttributeSet attrs) {
+    public ZBarView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ZXingView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ZBarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -38,7 +38,7 @@ public class ZXingView extends QRCodeView implements CodeReader {
     @Nullable
     @Override
     public String decodeBitmap(@NonNull Bitmap bitmap) {
-        return Decoder.decode(bitmap);
+        return null;
     }
 
     @Nullable
@@ -49,5 +49,6 @@ public class ZXingView extends QRCodeView implements CodeReader {
 
     @Override
     public void onPostCodeDecode(@Nullable String result) {
+
     }
 }
