@@ -21,6 +21,8 @@ import java.lang.ref.SoftReference
 
 class GeneratorActivity : AppCompatActivity() {
 
+    private val tasks = ArrayList<EncodeTask>(6)
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,22 +30,29 @@ class GeneratorActivity : AppCompatActivity() {
         val size = CoreUtil.dp(this, 180).toInt()
 
         text1.text = "https://google.com/"
-        EncodeTask("https://google.com/", size, resources, image1)
+        tasks += EncodeTask("https://google.com/", size, resources, image1)
 
         text2.text = "https://bing.com/"
-        EncodeTask("https://bing.com/", size, resources, image2)
+        tasks += EncodeTask("https://bing.com/", size, resources, image2)
 
         text3.text = "https://github.com/"
-        EncodeTask("https://github.com/", size, resources, image3)
+        tasks += EncodeTask("https://github.com/", size, resources, image3)
 
         text4.text = "https://stackoverflow.com/"
-        EncodeTask("https://stackoverflow.com/", size, resources, image4)
+        tasks += EncodeTask("https://stackoverflow.com/", size, resources, image4)
 
         text5.text = "https://medium.com/"
-        EncodeTask("https://medium.com/", size, resources, image5)
+        tasks += EncodeTask("https://medium.com/", size, resources, image5)
 
         text6.text = "https://youtube.com/"
-        EncodeTask("https://youtube.com/", size, resources, image6)
+        tasks += EncodeTask("https://youtube.com/", size, resources, image6)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        tasks.filter { it.status != AsyncTask.Status.FINISHED }
+            .forEach { it.cancel(true) }
     }
 }
 
