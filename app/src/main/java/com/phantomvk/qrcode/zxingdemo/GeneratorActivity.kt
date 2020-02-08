@@ -70,6 +70,7 @@ class EncodeTask(
     }
 
     override fun doInBackground(vararg params: Void?): Bitmap? {
+        if (isCancelled) return null
         return try {
             val dst = Encoder.encodeQrCode(contents, pixels, HINTS)
             val src = BitmapFactory.decodeResource(resources, R.mipmap.ic_launcher)
